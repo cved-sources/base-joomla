@@ -10,6 +10,7 @@ ENV LC_ALL C.UTF-8
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get -y update \
     && apt-get -y install \
+    php7.0-curl \
     php-mcrypt \
     && apt-get autoremove \
     && apt-get clean \
@@ -18,12 +19,14 @@ RUN apt-get -y update \
 COPY build/joomla/joomla.3.9.2.zip /tmp/
 COPY build/joomla/configuration.php /tmp/
 COPY build/joomla/db.sql /
+COPY build/joomla/install-joomla-extension.php /tmp/
 
 RUN rm -rf /var/www/html/* \
     && unzip -x /tmp/joomla.3.9.2.zip -d /var/www/html/ \
     && rm -rf /var/www/html/installation/ \
     && mv -f /tmp/configuration.php /var/www/html/ \
     && mv -f /var/www/html/robots.txt.dist /var/www/html/robots.txt \
+    && mv -f /tmp/install-joomla-extension.php /var/www/html/cli/ \
     && chown -R www-data:www-data /var/www/html/ \
     && rm -f /tmp/*
 
